@@ -1,24 +1,21 @@
 <?php
 require ('config.php');
 require_once 'vendor/autoload.php';
+//require ('detail.php');
 
 MercadoPago\SDK::setAccessToken(access_token);
 MercadoPago\SDK::setIntegratorId("dev_24c65fb163bf11ea96500242ac130004");
 
 $payment_methods = MercadoPago\SDK::get("/v1/payment_methods");
 
-
-$description        =filter_input(INPUT_POST,'description');
-$amount             =filter_input(INPUT_POST,'price');
-
-
-
-
+$description        =filter_input(INPUT_POST,'titulo');
+//$precio             =filter_input(INPUT_POST,'precio');
+$precio = $_POST['price'];
 $token              =filter_input(INPUT_POST,'token');
-$imagen              =filter_input(INPUT_POST,'img');
+$imagen              =filter_input(INPUT_POST,'imagen');
 
  $payment = new MercadoPago\Payment();
-    $payment->transaction_amount = $amount;
+    $payment->transaction_amount = $precio;
     $payment->token = $token;
     $payment->description = $description;
     $payment->installments = 6;
@@ -34,16 +31,16 @@ $imagen              =filter_input(INPUT_POST,'img');
 	);
     
     $payment->save();
-
 	
 	$preference = new MercadoPago\Preference();
     
 // Crea un ítem en la preferencia
     $item = new MercadoPago\Item();
+    //$item->titulo = $description;
     $item->id = 1234;
     $item->title = $description;
     $item->quantity = 1;
-    $item->unit_price = $amount;
+    $item->unit_price = $precio;
     $item->image = $imagen;
     $item->description = "Dispositivo movil de Tienda e-commerce" ;
     $preference->items = array($item);
@@ -51,16 +48,17 @@ $imagen              =filter_input(INPUT_POST,'img');
     $preference->payment_methods = array("excluded_payment_methods" => array(array("id" => "amex")),
     	"excluded_payment_types" => array(array("id" => "atm")),
     	"installments" => 6);
-    $ext = rand(1, 9999999999999);
-    $preference->external_reference = $ext;
+    
+    $preference->external_reference = "kareninakauffmann1989@gmail.com.ar";
 
-    $preference->back_urls = ['success' => 'https://www.mercadopago.com', 'pending' => "#", "failure" => "#"];
+    $preference->back_urls = array('success' => 'http://localhost/proyectosK/MP/ecommerce/index.php', 'pending' => 'http://localhost/proyectosK/MP/ecommerce/detail.php', 'failure' => 'https://www.mercadolibre.com.ar') ;
+    $preference->auto_return = "approved";
 
-    $preference->notification_url = "https://hookb.in/kxJNkZO1gLFrOOoLbNPZ";
+    $preference->notification_url = "https://0cffd0c1c9a0f22a210e6525c53365a7.m.pipedream.net";
 
     $preference->save();
 
 	//echo '<pre>',print_r($payment),'</pre>';
-    $link = $preference->init_point;
+    echo $preference->init_point;
     
 ?>
