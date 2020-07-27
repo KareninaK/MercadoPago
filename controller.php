@@ -47,7 +47,7 @@ $item->quantity = 1;
 $item->unit_price = $precio;
 $item->image = $imagen;
 $item->category_id = "phones";
-$item->description = "Dispositivo movil de Tienda e-commerce" ;
+$item->description = "Dispositivo móvil de Tienda e-commerce";
 $preference->items = array($item);
     
 $preference->payment_methods = array("excluded_payment_methods" => 
