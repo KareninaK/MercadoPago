@@ -1,6 +1,6 @@
 <?php
 require_once 'vendor/autoload.php';
-require_once 'controller.php';
+include_once 'controller.php';
 
     $titulo = $_POST['title'];
     $precio = $_POST['price'];
